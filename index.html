@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="https://schema.org/WebApplication">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Analyze your Instagram ZIP data locally to discover who unfollowed you — fast, secure, private, and 100% free. No login required.">
+  <meta name="keywords"
+    content="Instagram unfollowers, privacy, Instagram ZIP, Instagram data analyzer, local tool, unfollow tracker">
+  <meta name="author" content="UnfollowersTracker">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="UnfollowersTracker – Instagram Unfollowers Analyzer">
+  <meta property="og:description" content="Find who doesn't follow you back. No login. No upload. 100% private.">
+  <meta property="og:url" content="https://unfollowerstracker.com">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://unfollowerstracker.com/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="UnfollowersTracker">
+  <meta name="twitter:description" content="Instagram unfollow analyzer. Local, private and free.">
+  <meta name="twitter:image" content="https://unfollowerstracker.com/preview.png">
+
+  <link rel="canonical" href="https://unfollowerstracker.com/">
+  <title>UnfollowersTracker – Instagram Unfollowers Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" crossorigin="anonymous"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX'); // Replace with your Google Analytics ID
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "UnfollowersTracker",
+      "url": "https://unfollowerstracker.com/",
+      "description": "Discover who unfollowed you on Instagram with our secure, private, and professional tool.",
+      "applicationCategory": "Utility",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true,
+      "hasPart": [
+        {
+          "@type": "WebPageElement",
+          "name": "AdBanner",
+          "@id": "#ads"
+        },
+        {
+          "@type": "DonateAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.paypal.com/donate?hosted_button_id=YOUR_PAYPAL_BUTTON_ID"
+          },
+          "description": "Support the project via donation"
+        }
+      ]
+    }
+  </script>
+  <style>
+    :root {
+      --bg-light: #f5f7fa;
+      --bg-dark: #0d1117;
+      --text-light: #1f2937;
+      --text-dark: #e5e7eb;
+      --card-light: #ffffff;
+      --card-dark: #161b22;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --border: #d1d5db;
+      --input-border: #cbd5e1;
+      --font-main: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+
+
+    html[data-theme="light"] {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    html[data-theme="dark"] {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background-color: inherit;
+      color: inherit;
+    }
+
+    header,
+    section,
+    footer {
+      background-color: var(--card-light);
+    }
+
+    html[data-theme="dark"] header,
+    html[data-theme="dark"] section,
+    html[data-theme="dark"] footer {
+      background-color: var(--card-dark);
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--accent);
+      margin: 0 0 1rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 500;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+
+    html[data-theme="dark"] select,
+    html[data-theme="dark"] button.theme-toggle {
+      background: #2c2c2c;
+      color: var(--text-dark);
+    }
+
+    .upload-box {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      margin: 2rem auto 0;
+      text-align: center;
+      position: relative;
+      background: var(--card-light);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    html[data-theme="dark"] .upload-box {
+      background: var(--card-dark);
+      border-color: #2f2f2f;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.02);
+    }
+
+    .upload-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      margin-top: 1.5rem;
+      background: var(--accent);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    #progressBar {
+      width: 0;
+      height: 6px;
+      background: var(--accent);
+      margin-top: 1rem;
+      transition: width 0.3s ease;
+      border-radius: 3px;
+    }
+
+    ol,
+    p,
+    label,
+    summary,
+    details {
+      color: inherit;
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    details {
+      margin-bottom: 1rem;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem 2rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    html[data-theme="dark"] footer {
+      color: #999;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      background: white;
+      color: var(--text-light);
+      font-size: 1rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+
+    html[data-theme="dark"] input,
+    html[data-theme="dark"] textarea,
+    html[data-theme="dark"] select {
+      background: #2c2c2c;
+      color: var(--text-dark);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Steps section */
+    .steps-section {
+      padding: 2rem 1rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .steps-title {
+      text-align: center;
+      color: var(--accent);
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+    }
+
+    .steps-container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .step-box {
+      flex: 1;
+      min-width: 260px;
+      background: var(--card-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    html[data-theme="dark"] .step-box {
+      background: var(--card-dark);
+      border-color: #2f2f2f;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.02);
+    }
+
+    .step-title {
+      color: var(--accent);
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    .step-list {
+      padding-left: 1.2rem;
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: inherit;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      flex-wrap: nowrap;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-controls select {
+      font-family: var(--font-main);
+      height: 40px;
+      padding: 0 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      background: white;
+      color: var(--text-light);
+      width: auto !important;
+      /* <- clave */
+      min-width: 130px;
+      line-height: 1;
+      margin: 0;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      font-size: 1.25rem;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      background: white;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    html[data-theme="dark"] .header-controls select,
+    html[data-theme="dark"] .header-controls .theme-toggle {
+      background: #2c2c2c;
+      color: var(--text-dark);
+      border-color: #444;
+    }
+  </style>
+
+</head>
+
+<body>
+  <header role="banner" aria-label="Main header">
+    <h1 data-i18n="header.title">UnfollowersTracker</h1>
+    <div class="header-controls">
+      <label for="languageSelector" class="visually-hidden">Language</label>
+      <select aria-label="Select Language" onchange="setLang(this.value)">
+        <option value="en">🇬🇧 English</option>
+        <option value="es">🇪🇸 Español</option>
+      </select>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggleBtn">🌙</button>
+    </div>
+  </header>
+  <main>
+    <section aria-labelledby="hero-heading" style="text-align:center;padding:3rem 1rem;border-bottom:1px solid #eee;">
+      <h2 id="hero-heading" data-i18n="hero.title">Who Unfollowed You on Instagram?</h2>
+      <p data-i18n="hero.description">No password. No login. Just drop your Instagram ZIP file and discover who doesn't
+        follow you back. Fast. Private. Local.</p>
+      <div class="upload-box" id="dropZone">
+        <p id="dropMessage" data-i18n="drop.message">Drag & drop your Instagram .zip or click to upload</p>
+        <input type="file" id="zipInput" accept=".zip">
+      </div>
+      <button onclick="startAnalysis()" class="btn-primary" data-i18n="button.analyze">Analyze Now</button>
+      <div id="progressBar"></div>
+      <div id="result" aria-live="polite" style="margin-top:1.5rem;font-weight:500;color:#28a745;"></div>
+    </section>
+
+
+    <section id="stepsSection" class="steps-section">
+      <h2 data-i18n="steps.title" class="steps-title">
+        3 Simple Steps to Find Out Who Doesn't Follow You Back
+      </h2>
+
+      <div class="steps-container">
+        <div class="step-box">
+          <h4 data-i18n="steps.step1.title" class="step-title">1. Request Your Data</h4>
+          <ul class="step-list">
+            <li data-i18n="steps.step1.li1">
+              <strong>Go to:</strong>
+              <a href="https://www.instagram.com/download/request/" target="_blank">
+                instagram.com/download/request
+              </a>
+              and log into your Instagram account. Click on <strong>Download your information.</strong>
+            </li>
+            <li data-i18n="steps.step1.li2">Choose <strong>Download or transfer information</strong> → select your
+              profile → <strong>Next</strong>.</li>
+            <li data-i18n="steps.step1.li3">Select <em>Some of your information</em>, scroll to
+              <strong>Connections</strong> and check only <em>Followers and Following</em>.
+            </li>
+            <li data-i18n="steps.step1.li4">Choose <strong>Download to device</strong>, format <strong>JSON</strong>,
+              date range <strong>All time</strong>, and tap <strong>Create files</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="step-box">
+          <h4 data-i18n="steps.step2.title" class="step-title">2. Get the ZIP File</h4>
+          <ul class="step-list">
+            <li data-i18n="steps.step2.li1">Wait for the email from Instagram: <em>"Your Meta information download is
+                ready"</em>.</li>
+            <li data-i18n="steps.step2.li2">Open it and click <strong>Download Your Information</strong>.</li>
+            <li data-i18n="steps.step2.li3">Log in if needed and click <strong>Download</strong> on the page. Save the
+              ZIP
+              file to your device.</li>
+          </ul>
+        </div>
+
+        <div class="step-box">
+          <h4 data-i18n="steps.step3.title" class="step-title">3. Upload & Discover</h4>
+          <ul class="step-list">
+            <li data-i18n="steps.step3.li1">Go to <strong>UnfollowersTracker.com</strong> and click
+              <em>Discover Unfollowers</em>.
+            </li>
+            <li data-i18n="steps.step3.li2">Upload your ZIP file when prompted.</li>
+            <li data-i18n="steps.step3.li3">Click again to launch the scan. All done locally, no data leaves your
+              device.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="ads" style="text-align:center;padding:2rem 1rem;border-top:1px solid #eee;">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxxxxxxxxxxxxxx" data-ad-slot="1111111111"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+
+      <ins class="adsbygoogle" style="display:block;margin-top:2rem" data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"
+        data-ad-slot="2222222222" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <ins class="adsbygoogle" id="analyzeAd" style="margin-top:2rem" data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"
+        data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true" loading="lazy"></ins>
+
+
+      <noscript>
+        <div style="margin-top:1rem;color:#c00;font-weight:500;">
+          It looks like ads couldn’t load. Please disable your ad blocker to support this free tool.
+        </div>
+      </noscript>
+    </section>
+
+    <section style="padding:3rem 1rem;border-top:1px solid #eee;">
+      <h3 style="text-align:center;" data-i18n="faq.title">Frequently Asked Questions</h3>
+      <details>
+        <summary data-i18n="faq.q1">Is this tool safe to use?</summary>
+        <p data-i18n="faq.a1">Yes. All data stays on your device. Nothing is uploaded or shared.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq.q2">Do I need to log into Instagram?</summary>
+        <p data-i18n="faq.a2">No login required. We use the ZIP file you receive from Instagram.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq.q3">Will this harm my Instagram account?</summary>
+        <p data-i18n="faq.a3">Not at all. No interaction with your account. Just local file reading.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq.q4">Can I use this on mobile?</summary>
+        <p data-i18n="faq.a4">Yes, but desktop use is recommended for full compatibility.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq.q5">Is this tool really free?</summary>
+        <p data-i18n="faq.a5">Completely free and open source. Star us on GitHub if you like it!</p>
+      </details>
+    </section>
+
+
+    <section style="padding:2rem 1rem;text-align:center;">
+      <h3 data-i18n="privacy.title">Your Privacy Matters</h3>
+      <p data-i18n="privacy.description">
+        All analysis is done locally in your browser. We never see or store your data. It's open source and
+        completely secure.
+      </p>
+      <a href="https://github.com/your-username/unfollowerstracker" target="_blank">View on GitHub</a>
+    </section>
+
+
+
+    <section style="padding:2rem 1rem;text-align:center;border-top:1px solid #eee;">
+      <h3 data-i18n="donate.title">Support This Project</h3>
+      <p data-i18n="donate.description">If this tool helps you, consider a small donation to keep it going.</p>
+      <form action="https://www.paypal.com/donate" method="post" target="_blank">
+        <input type="hidden" name="hosted_button_id" value="YOUR_PAYPAL_BUTTON_ID">
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit"
+          alt="Donate with PayPal">
+      </form>
+    </section>
+
+  </main>
+
+  <footer role="contentinfo" data-i18n="footer.text">
+    <nav aria-label="Footer Navigation">
+      <ul style="list-style: none; padding: 0; display: flex; justify-content: center; gap: 1rem;">
+        <li><a href="#" rel="nofollow noopener">Privacy</a></li>
+        <li><a href="#" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+    <p>© 2025 UnfollowersTracker</p>
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        "header.title": "UnfollowersTracker",
+
+        "hero.title": "Who Unfollowed You on Instagram?",
+        "hero.description": "No password. No login. Just drop your Instagram ZIP file and discover who doesn't follow you back. Fast. Private. Local.",
+        "button.analyze": "Analyze Now",
+        "drop.message": "Drag & drop your Instagram .zip or click to upload",
+        "drop.over": "Drop the file here",
+
+        "steps.title": "3 Simple Steps to Find Out Who Doesn't Follow You Back",
+        "steps.step1.title": "1. Request Your Data",
+        "steps.step1.li1": "Open Instagram, go to your profile and tap <strong>Your Activity</strong>.",
+        "steps.step1.li2": "Choose <strong>Download or transfer information</strong> → select your profile → <strong>Next</strong>.",
+        "steps.step1.li3": "Select <em>Some of your information</em>, scroll to <strong>Connections</strong> and check only <em>Followers and Following</em>.",
+        "steps.step1.li4": "Choose <strong>Download to device</strong>, format <strong>JSON</strong>, date range <strong>All time</strong>, and tap <strong>Create files</strong>.",
+        "steps.step2.title": "2. Get the ZIP File",
+        "steps.step2.li1": "Wait for the email from Instagram: <em>\"Your Meta information download is ready\"</em>.",
+        "steps.step2.li2": "Open it and click <strong>Download Your Information</strong>.",
+        "steps.step2.li3": "Log in if needed and click <strong>Download</strong> on the page. Save the ZIP file to your device.",
+        "steps.step3.title": "3. Upload & Discover",
+        "steps.step3.li1": "Go to <strong>UnfollowersTracker.com</strong> and click <em>Discover Unfollowers</em>.",
+        "steps.step3.li2": "Upload your ZIP file when prompted.",
+        "steps.step3.li3": "Click again to launch the scan. All done locally, no data leaves your device.",
+
+        "result.success": "Everyone follows you back!",
+        "result.warning": "Users not following you back:",
+        "error.nofile": "Please select a ZIP file",
+        "error.invalid": "Error analyzing the ZIP file. Please ensure it is valid.",
+        "error.missingfiles": "Could not find both followers_1.json and following.json in the ZIP.",
+
+        "privacy.title": "Your Privacy Matters",
+        "privacy.description": "All analysis is done locally in your browser. We never see or store your data. It's open source and completely secure.",
+        "faq.title": "Frequently Asked Questions",
+        "faq.q1": "Is this tool safe to use?",
+        "faq.a1": "Yes. All data stays on your device. Nothing is uploaded or shared.",
+        "faq.q2": "Do I need to log into Instagram?",
+        "faq.a2": "No login required. We use the ZIP file you receive from Instagram.",
+        "faq.q3": "Will this harm my Instagram account?",
+        "faq.a3": "Not at all. No interaction with your account. Just local file reading.",
+        "faq.q4": "Can I use this on mobile?",
+        "faq.a4": "Yes, but desktop use is recommended for full compatibility.",
+        "faq.q5": "Is this tool really free?",
+        "faq.a5": "Completely free and open source. Star us on GitHub if you like it!",
+
+        "contact.title": "Contact Us",
+        "contact.email": "Your Email",
+        "contact.message": "Your Message",
+        "contact.send": "Send",
+
+        "donate.title": "Support This Project",
+        "donate.description": "If this tool helps you, consider a small donation to keep it going.",
+        "footer.text": "© 2025 UnfollowersTracker — Privacy — GitHub"
+      },
+
+      es: {
+        "header.title": "UnfollowersTracker",
+        "hero.title": "¿Quién te ha dejado de seguir en Instagram?",
+        "hero.description": "Sin contraseña. Sin inicio de sesión. Solo sube tu archivo ZIP de Instagram y descubre quién no te sigue de vuelta. Rápido. Privado. Local.",
+        "button.analyze": "Analizar ahora",
+        "drop.message": "Arrastra tu archivo .zip de Instagram o haz clic para subirlo",
+        "drop.over": "Suelta el archivo aquí",
+        "steps.title": "3 pasos para saber quién no te sigue de vuelta",
+        "steps.step1.title": "1. Solicita tus datos",
+        "steps.step1.li1": "Abre Instagram, entra a tu perfil y toca <strong>Tu actividad</strong>.",
+        "steps.step1.li2": "Elige <strong>Descargar o transferir tu información</strong> → selecciona tu cuenta → <strong>Siguiente</strong>.",
+        "steps.step1.li3": "Selecciona <em>Parte de tu información</em>, ve a <strong>Conexiones</strong> y marca solo <em>Seguidores y seguidos</em>.",
+        "steps.step1.li4": "Elige <strong>Descargar en el dispositivo</strong>, formato <strong>JSON</strong>, rango <strong>Todo el tiempo</strong> y presiona <strong>Crear archivos</strong>.",
+        "steps.step2.title": "2. Descarga el archivo ZIP",
+        "steps.step2.li1": "Espera el email de Instagram: <em>\"Tu descarga de información está lista\"</em>.",
+        "steps.step2.li2": "Ábrelo y haz clic en <strong>Descargar tu información</strong>.",
+        "steps.step2.li3": "Inicia sesión si es necesario y haz clic en <strong>Descargar</strong>. Guarda el archivo ZIP en tu dispositivo.",
+        "steps.step3.title": "3. Sube y analiza",
+        "steps.step3.li1": "Entra a <strong>UnfollowersTracker.com</strong> y haz clic en <em>Descubrir quién no te sigue</em>.",
+        "steps.step3.li2": "Carga tu archivo ZIP cuando se te indique.",
+        "steps.step3.li3": "Vuelve a hacer clic para iniciar el análisis. Todo ocurre localmente, sin enviar datos.",
+        "result.success": "Todos te siguen de vuelta!",
+        "result.warning": "Usuarios que no te siguen de vuelta:",
+        "error.nofile": "Por favor selecciona un archivo ZIP",
+        "error.invalid": "Error al analizar el archivo ZIP. Asegúrate de que sea válido.",
+        "error.missingfiles": "No se encontraron followers_1.json y following.json en el ZIP.",
+        "privacy.title": "Tu privacidad importa",
+        "privacy.description": "Todo el análisis se hace localmente en tu navegador. Nunca vemos ni almacenamos tus datos. Es código abierto y completamente seguro.",
+        "faq.title": "Preguntas Frecuentes",
+        "faq.q1": "¿Es seguro usar esta herramienta?",
+        "faq.a1": "Sí. Todos los datos permanecen en tu dispositivo. Nada se sube ni se comparte.",
+        "faq.q2": "¿Necesito iniciar sesión en Instagram?",
+        "faq.a2": "No es necesario iniciar sesión. Usamos el archivo ZIP que recibes de Instagram.",
+        "faq.q3": "¿Esto afecta mi cuenta de Instagram?",
+        "faq.a3": "En absoluto. No hay interacción con tu cuenta. Solo se leen archivos localmente.",
+        "faq.q4": "¿Puedo usar esto en el móvil?",
+        "faq.a4": "Sí, pero se recomienda usarlo en escritorio para mejor compatibilidad.",
+        "faq.q5": "¿La herramienta es realmente gratuita?",
+        "faq.a5": "Completamente gratuita y de código abierto. ¡Danos una estrella en GitHub si te gusta!",
+        "contact.title": "Contáctanos",
+        "contact.email": "Tu correo electrónico",
+        "contact.message": "Tu mensaje",
+        "contact.send": "Enviar",
+        "donate.title": "Apoya este proyecto",
+        "donate.description": "Si esta herramienta te resulta útil, considera una pequeña donación para mantenerla activa.",
+        "footer.text": "© 2025 UnfollowersTracker — Privacidad — GitHub"
+      }
+    };
+
+    let currentLang = localStorage.getItem('lang') || navigator.language.slice(0, 2) || 'en';
+    function applyTranslations(lang) {
+      const strings = translations[lang] || translations['en'];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (strings[key]) {
+          el.innerHTML = strings[key];
+        }
+      });
+    }
+
+    function setLang(lang) {
+      console.log("Language set to:", lang);
+      localStorage.setItem('lang', lang);
+      applyTranslations(lang);
+      const langSelector = document.querySelector('select[aria-label="Select Language"]');
+      if (langSelector) langSelector.value = lang;
+      currentLang = lang;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('lang') || navigator.language.slice(0, 2) || 'en';
+      const fallback = Object.keys(translations).includes(savedLang) ? savedLang : 'en';
+      applyTranslations(fallback);
+      const langSelector = document.querySelector('select[aria-label="Select Language"]');
+      if (langSelector) {
+        langSelector.value = fallback;
+        langSelector.addEventListener('change', e => setLang(e.target.value));
+      }
+    });
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    document.documentElement.setAttribute('data-theme', 'light');
+
+    const input = document.getElementById('zipInput');
+    const dropZone = document.getElementById('dropZone');
+    const dropMessage = document.getElementById('dropMessage');
+
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#0056d2';
+      dropMessage.setAttribute('data-i18n', 'drop.over');
+      applyTranslations(currentLang);
+    });
+
+    dropZone.addEventListener('dragleave', e => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#bbb';
+      dropMessage.textContent = 'Drag & drop your Instagram .zip or click to upload';
+    });
+
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      input.files = e.dataTransfer.files;
+      dropMessage.textContent = e.dataTransfer.files[0]?.name || 'File selected';
+      dropZone.style.borderColor = '#28a745';
+    });
+
+    dropZone.addEventListener('click', e => {
+      if (e.target === dropZone || e.target === dropMessage) {
+        input.click();
+      }
+    });
+
+    async function startAnalysis() {
+      gtag('event', 'click', {
+        'event_category': 'analysis',
+        'event_label': 'analyze_button_click'
+      });
+      const ad = document.getElementById('analyzeAd');
+      ad.style.display = 'block';
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      const bar = document.getElementById('progressBar');
+      const result = document.getElementById('result');
+      result.innerHTML = '';
+      bar.style.width = '0';
+
+      const file = input.files[0];
+      if (!file) return alert(translations[currentLang]["error.nofile"]);
+
+      let p = 0;
+      const interval = setInterval(() => {
+        p += 20;
+        bar.style.width = p + '%';
+        if (p >= 100) clearInterval(interval);
+      }, 300);
+
+      try {
+        const zip = await JSZip.loadAsync(file);
+        let followersFile = null;
+        let followingFile = null;
+
+        zip.forEach((relativePath, zipEntry) => {
+          if (/followers_1\.json$/.test(zipEntry.name)) followersFile = zipEntry;
+          if (/following\.json$/.test(zipEntry.name)) followingFile = zipEntry;
+        });
+
+        if (!followersFile || !followingFile) {
+          clearInterval(interval);
+          result.style.color = 'red';
+          result.innerHTML = translations[currentLang]["error.invalid"];
+          return;
+        }
+
+        const followersData = await followersFile.async('text');
+        const followingData = await followingFile.async('text');
+        const extractUsernames = (entries) => {
+          if (!Array.isArray(entries)) return [];
+          return entries.map(entry => {
+            if (entry.string_list_data && Array.isArray(entry.string_list_data)) {
+              return entry.string_list_data[0]?.value || null;
+            }
+            return null;
+          }).filter(Boolean);
+        };
+
+        const followersJson = JSON.parse(followersData); // already an array
+        const followingRoot = JSON.parse(followingData); // root object
+        const followingJson = followingRoot.relationships_following || [];
+
+        const followers = new Set(extractUsernames(followersJson));
+        const following = extractUsernames(followingJson);
+
+        const notFollowingBack = following.filter(username => !followers.has(username));
+        clearInterval(interval);
+        result.style.color = notFollowingBack.length === 0 ? '#28a745' : '#d9534f';
+        result.innerHTML = notFollowingBack.length === 0
+          ? '🎉 Everyone follows you back!'
+          : `Users not following you back:<br><ul style="margin-top:0.5rem;">${notFollowingBack.map(u => `<li>${u}</li>`).join('')}</ul>`;
+
+      } catch (err) {
+        clearInterval(interval);
+        console.error(err);
+        result.style.color = 'red';
+        result.innerHTML = '❌ Error analyzing the ZIP file. Please ensure it is valid.';
+      }
+    }
+
+  </script>
+</body>
+
+</html>
