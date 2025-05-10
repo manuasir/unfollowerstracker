@@ -37,7 +37,7 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX'); // Replace with your Google Analytics ID
+    gtag('config', 'G-XXXXXXXXXX');
   </script>
 
   <script type="application/ld+json">
@@ -104,6 +104,89 @@
     * {
       box-sizing: border-box;
       transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .pagination button,
+    .pagination span {
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      background: var(--card-light);
+      color: var(--text-light);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      min-width: 36px;
+    }
+
+    .pagination .active {
+      background-color: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    html[data-theme="dark"] .pagination span {
+      background: var(--card-dark);
+      color: var(--text-dark);
+    }
+
+    .result-user {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-user a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .result-user a:hover {
+      text-decoration: underline;
+    }
+
+    .result-user a.btn-primary {
+      background: var(--accent);
+      color: #fff !important;
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .result-user a.btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .download-btn {
+      margin-top: 1.5rem;
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .download-btn:hover {
+      background: var(--accent-hover);
     }
 
     body {
@@ -177,6 +260,17 @@
       inset: 0;
       opacity: 0;
       cursor: pointer;
+    }
+
+    .upload-box.json-loaded {
+      background-color: #e6ffed;
+      border-color: var(--success);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    html[data-theme="dark"] .upload-box.json-loaded {
+      background-color: #203d2a;
+      border-color: #22c55e;
     }
 
     .btn-primary {
@@ -421,6 +515,9 @@
       <button onclick="startAnalysis()" class="btn-primary" data-i18n="button.analyze">Analyze Now</button>
       <div id="progressBar"></div>
       <div id="result" aria-live="polite" style="margin-top:1.5rem;font-weight:500;color:#28a745;"></div>
+      <div id="pagination"></div>
+      <a id="downloadLink" class="download-btn" href="#" data-i18n="a.downloadLink" style="display:none"
+        download="unfollowers.json">Download Result</a>
     </section>
 
 
@@ -558,6 +655,53 @@
   </footer>
 
   <script>
+    const PAGE_SIZE = 10;
+    let currentPage = 1;
+    let notFollowingBack = [];
+
+    function renderPage(page) {
+      const result = document.getElementById('result');
+      const pagination = document.getElementById('pagination');
+      const start = (page - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const pageItems = notFollowingBack.slice(start, end);
+
+      result.innerHTML = pageItems.map(u => `
+        <div class="result-user">
+          <a href="https://instagram.com/${u}" target="_blank">@${u}</a>
+          <a class="btn-primary" href="https://instagram.com/${u}" target="_blank">Unfollow</a>
+        </div>`).join('');
+
+      const totalPages = Math.ceil(notFollowingBack.length / PAGE_SIZE);
+      let buttons = '';
+      const maxButtons = 5;
+      const half = Math.floor(maxButtons / 2);
+      let startPage = Math.max(1, page - half);
+      let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+      if (endPage - startPage < maxButtons - 1) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+      }
+
+      buttons += `<button onclick="renderPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>&laquo;</button>`;
+
+      for (let i = startPage; i <= endPage; i++) {
+        buttons += `<button class="${i === page ? 'active' : ''}" onclick="renderPage(${i})">${i}</button>`;
+      }
+
+      buttons += `<button onclick="renderPage(${page + 1})" ${page === totalPages ? 'disabled' : ''}>&raquo;</button>`;
+
+      pagination.innerHTML = '<div class="pagination">' + buttons + '</div>';
+      currentPage = page;
+    }
+
+    function downloadJSON(data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.getElementById('downloadLink');
+      link.href = url;
+      link.style.display = 'inline-block';
+    }
     const translations = {
       en: {
         "header.title": "UnfollowersTracker",
@@ -610,7 +754,9 @@
 
         "donate.title": "Support This Project",
         "donate.description": "If this tool helps you, consider a small donation to keep it going.",
-        "footer.text": "© 2025 UnfollowersTracker — Privacy — GitHub"
+        "footer.text": "© 2025 UnfollowersTracker — Privacy — GitHub",
+        "a.downloadLink": "Download Result",
+        "error.missingfiles": "Could not find both followers_1.json and following.json in the ZIP."
       },
 
       es: {
@@ -658,7 +804,9 @@
         "contact.send": "Enviar",
         "donate.title": "Apoya este proyecto",
         "donate.description": "Si esta herramienta te resulta útil, considera una pequeña donación para mantenerla activa.",
-        "footer.text": "© 2025 UnfollowersTracker — Privacidad — GitHub"
+        "footer.text": "© 2025 UnfollowersTracker — Privacidad — GitHub",
+        "a.downloadLink": "Descargar resultado",
+        "error.missingfiles": "No se encontraron followers_1.json y following.json en el ZIP."
       }
     };
 
@@ -702,13 +850,16 @@
 
     const input = document.getElementById('zipInput');
     const dropZone = document.getElementById('dropZone');
-    const dropMessage = document.getElementById('dropMessage');
-
+    dropZone.classList.remove('json-loaded');
     dropZone.addEventListener('dragover', e => {
       e.preventDefault();
       dropZone.style.borderColor = '#0056d2';
       dropMessage.setAttribute('data-i18n', 'drop.over');
       applyTranslations(currentLang);
+    });
+
+    input.addEventListener('change', () => {
+      dropZone.classList.remove('json-loaded');
     });
 
     dropZone.addEventListener('dragleave', e => {
@@ -721,7 +872,7 @@
       e.preventDefault();
       input.files = e.dataTransfer.files;
       dropMessage.textContent = e.dataTransfer.files[0]?.name || 'File selected';
-      dropZone.style.borderColor = '#28a745';
+      dropZone.style.borderColor = '#28a745'; change
     });
 
     dropZone.addEventListener('click', e => {
@@ -738,13 +889,15 @@
       const ad = document.getElementById('analyzeAd');
       ad.style.display = 'block';
       (adsbygoogle = window.adsbygoogle || []).push({});
+
       const bar = document.getElementById('progressBar');
       const result = document.getElementById('result');
+      const input = document.getElementById('zipInput');
       result.innerHTML = '';
       bar.style.width = '0';
-
+      dropZone.classList.remove('json-loaded');
       const file = input.files[0];
-      if (!file) return alert(translations[currentLang]["error.nofile"]);
+      if (!file) return alert(translations[currentLang]['error.nofile']);
 
       let p = 0;
       const interval = setInterval(() => {
@@ -766,38 +919,31 @@
         if (!followersFile || !followingFile) {
           clearInterval(interval);
           result.style.color = 'red';
-          result.innerHTML = translations[currentLang]["error.invalid"];
+          result.innerHTML = translations[currentLang]['error.missingfiles'];
+          dropZone.classList.remove('json-loaded');
           return;
         }
 
         const followersData = await followersFile.async('text');
         const followingData = await followingFile.async('text');
+
+        const followersJson = JSON.parse(followersData);
+        const followingJson = JSON.parse(followingData).relationships_following || [];
+
         const extractUsernames = (entries) => {
-          if (!Array.isArray(entries)) return [];
-          return entries.map(entry => {
-            if (entry.string_list_data && Array.isArray(entry.string_list_data)) {
-              return entry.string_list_data[0]?.value || null;
-            }
-            return null;
-          }).filter(Boolean);
+          return entries.map(entry => entry.string_list_data?.[0]?.value).filter(Boolean);
         };
 
-        const followersJson = JSON.parse(followersData); // already an array
-        const followingRoot = JSON.parse(followingData); // root object
-        const followingJson = followingRoot.relationships_following || [];
-
         const followers = new Set(extractUsernames(followersJson));
-        const following = extractUsernames(followingJson);
+        notFollowingBack = extractUsernames(followingJson).filter(u => !followers.has(u));
 
-        const notFollowingBack = following.filter(username => !followers.has(username));
         clearInterval(interval);
-        result.style.color = notFollowingBack.length === 0 ? '#28a745' : '#d9534f';
-        result.innerHTML = notFollowingBack.length === 0
-          ? '🎉 Everyone follows you back!'
-          : `Users not following you back:<br><ul style="margin-top:0.5rem;">${notFollowingBack.map(u => `<li>${u}</li>`).join('')}</ul>`;
+        renderPage(1);
+        downloadJSON(notFollowingBack);
 
       } catch (err) {
         clearInterval(interval);
+        dropZone.classList.remove('json-loaded');
         console.error(err);
         result.style.color = 'red';
         result.innerHTML = '❌ Error analyzing the ZIP file. Please ensure it is valid.';
