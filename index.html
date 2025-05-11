@@ -106,7 +106,11 @@
       color: #e5e7eb;
     }
 
-
+    #analyzeAd {
+      min-height: 90px;
+      min-width: 320px;
+      width: 100%;
+    }
 
     .card,
     .upload-box,
@@ -665,7 +669,7 @@
       <h3 data-i18n="donate.title">Support This Project</h3>
       <p data-i18n="donate.description">If this tool helps you, consider a small donation to keep it going.</p>
       <form action="https://www.paypal.com/donate" method="post" target="_blank">
-        <input type="hidden" name="hosted_button_id" value="YOUR_PAYPAL_BUTTON_ID">
+        <input type="hidden" name="hosted_button_id" value="3BSXTM3CKDZZY">
         <button type="submit" class="btn-primary" style="
           display: inline-flex;
           align-items: center;
@@ -960,7 +964,21 @@
 
       const ad = document.getElementById('analyzeAd');
       ad.style.display = 'block';
-      (adsbygoogle = window.adsbygoogle || []).push({});
+
+      // Esperar a que tenga ancho para insertar el anuncio
+      const observer = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          if (entry.contentRect.width > 0) {
+            try {
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+              console.warn('AdSense push failed:', e);
+            }
+            observer.disconnect();
+          }
+        }
+      });
+      observer.observe(ad);
 
       const bar = document.getElementById('progressBar');
       const result = document.getElementById('result');
