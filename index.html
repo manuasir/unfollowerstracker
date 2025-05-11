@@ -8,23 +8,28 @@
     content="Analyze your Instagram ZIP data locally to discover who unfollowed you — fast, secure, private, and 100% free. No login required.">
   <meta name="keywords"
     content="Instagram unfollowers, privacy, Instagram ZIP, Instagram data analyzer, local tool, unfollow tracker">
-  <meta name="author" content="UnfollowersTracker">
+  <meta name="author" content="UnfollowsTracker">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="UnfollowersTracker – Instagram Unfollowers Analyzer">
+  <meta property="og:title" content="UnfollowsTracker – Instagram Unfollowers Analyzer">
   <meta property="og:description" content="Find who doesn't follow you back. No login. No upload. 100% private.">
-  <meta property="og:url" content="https://unfollowerstracker.com">
+  <meta property="og:url" content="https://unfollowstracker.com">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://unfollowerstracker.com/preview.png">
-
+  <meta property="og:image" content="https://unfollowstracker.com/preview.png">
+  <meta name="theme-color" content="#3b82f6">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="UnfollowersTracker">
+  <meta name="twitter:title" content="UnfollowsTracker">
   <meta name="twitter:description" content="Instagram unfollow analyzer. Local, private and free.">
-  <meta name="twitter:image" content="https://unfollowerstracker.com/preview.png">
+  <meta name="twitter:image" content="https://unfollowstracker.com/preview.png">
+  <meta name="google-adsense-account" content="ca-pub-9936199798582578">
 
-  <link rel="canonical" href="https://unfollowerstracker.com/">
-  <title>UnfollowersTracker – Instagram Unfollowers Analyzer</title>
+  <link rel="canonical" href="https://unfollowstracker.com/">
+  <title>UnfollowsTracker – Instagram Unfollowers Analyzer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
@@ -32,20 +37,21 @@
   <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7L4K4ZV4K3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+
+    gtag('config', 'G-7L4K4ZV4K3');
   </script>
 
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "UnfollowersTracker",
-      "url": "https://unfollowerstracker.com/",
+      "name": "UnfollowsTracker",
+      "url": "https://unfollowstracker.com/",
       "description": "Discover who unfollowed you on Instagram with our secure, private, and professional tool.",
       "applicationCategory": "Utility",
       "operatingSystem": "All",
@@ -90,15 +96,33 @@
     }
 
 
-
     html[data-theme="light"] {
-      background-color: var(--bg-light);
-      color: var(--text-light);
+      background-color: #f5f7fa;
+      color: #1f2937;
     }
 
     html[data-theme="dark"] {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
+      background-color: #0d1117;
+      color: #e5e7eb;
+    }
+
+
+
+    .card,
+    .upload-box,
+    .step-box {
+      background-color: var(--card-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    html[data-theme="dark"] .card,
+    html[data-theme="dark"] .upload-box,
+    html[data-theme="dark"] .step-box {
+      background-color: var(--card-dark);
+      border-color: #2f2f2f;
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.02);
     }
 
     * {
@@ -175,6 +199,7 @@
     .result-user a.btn-primary:hover {
       background: var(--accent-hover);
     }
+
     .download-btn {
       margin-top: 1.5rem;
       display: inline-block;
@@ -192,7 +217,7 @@
     body {
       margin: 0;
       font-family: var(--font-main);
-      background-color: inherit;
+      background: inherit;
       color: inherit;
     }
 
@@ -266,6 +291,12 @@
       background-color: #e6ffed;
       border-color: var(--success);
       transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    section,
+    header,
+    footer {
+      background: transparent;
     }
 
     html[data-theme="dark"] .upload-box.json-loaded {
@@ -379,7 +410,6 @@
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
     }
 
-    /* Steps section */
     .steps-section {
       padding: 2rem 1rem;
       border-top: 1px solid var(--border);
@@ -459,7 +489,6 @@
       background: white;
       color: var(--text-light);
       width: auto !important;
-      /* <- clave */
       min-width: 130px;
       line-height: 1;
       margin: 0;
@@ -493,9 +522,9 @@
 
 <body>
   <header role="banner" aria-label="Main header">
-    <h1 data-i18n="header.title">UnfollowersTracker</h1>
+    <h1 data-i18n="header.title">UnfollowsTracker</h1>
     <div class="header-controls">
-      <label for="languageSelector" class="visually-hidden">Language</label>
+      <label for="languageSelector" class="visually-hidden" data-i18n="label.language">Language</label>
       <select aria-label="Select Language" onchange="setLang(this.value)">
         <option value="en">🇬🇧 English</option>
         <option value="es">🇪🇸 Español</option>
@@ -562,7 +591,7 @@
         <div class="step-box">
           <h4 data-i18n="steps.step3.title" class="step-title">3. Upload & Discover</h4>
           <ul class="step-list">
-            <li data-i18n="steps.step3.li1">Go to <strong>UnfollowersTracker.com</strong> and click
+            <li data-i18n="steps.step3.li1">Go to <strong>UnfollowsTracker.com</strong> and click
               <em>Discover Unfollowers</em>.
             </li>
             <li data-i18n="steps.step3.li2">Upload your ZIP file when prompted.</li>
@@ -627,7 +656,7 @@
         All analysis is done locally in your browser. We never see or store your data. It's open source and
         completely secure.
       </p>
-      <a href="https://github.com/your-username/unfollowerstracker" target="_blank">View on GitHub</a>
+      <a href="https://github.com/your-username/unfollowstracker" target="_blank">View on GitHub</a>
     </section>
 
 
@@ -637,9 +666,22 @@
       <p data-i18n="donate.description">If this tool helps you, consider a small donation to keep it going.</p>
       <form action="https://www.paypal.com/donate" method="post" target="_blank">
         <input type="hidden" name="hosted_button_id" value="YOUR_PAYPAL_BUTTON_ID">
-        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit"
-          alt="Donate with PayPal">
+        <button type="submit" class="btn-primary" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          border: none;
+          cursor: pointer;
+        ">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#fff" viewBox="0 0 24 24"
+            aria-hidden="true">
+            <path
+              d="M21.6 8.3c.2-1.1.2-2.3-.1-3.4-.2-.9-.9-1.7-1.8-2.2s-2-.7-3-.6c-.6-.8-1.4-1.5-2.4-1.8-1.1-.4-2.4-.4-3.5 0-.9.3-1.7 1-2.2 1.7C6.1 1.3 4 1.6 2.6 2.8c-.8.6-1.3 1.5-1.5 2.4-.2 1.2 0 2.5.5 3.6.4.7.9 1.4 1.6 2 .9.9 1.8 1.8 2.7 2.7l1.7 1.6 2.8 2.6c.1.1.2.1.3.1s.2 0 .3-.1l2.9-2.7 1.5-1.4c1.4-1.3 2.8-2.7 4-4.1.6-.7 1.2-1.6 1.3-2.6z" />
+          </svg>
+          <span>Donate with PayPal</span>
+        </button>
       </form>
+
     </section>
 
   </main>
@@ -651,7 +693,7 @@
         <li><a href="#" rel="noopener">GitHub</a></li>
       </ul>
     </nav>
-    <p>© 2025 UnfollowersTracker</p>
+    <p>© 2025 UnfollowsTracker</p>
   </footer>
 
   <script>
@@ -704,7 +746,7 @@
     }
     const translations = {
       en: {
-        "header.title": "UnfollowersTracker",
+        "header.title": "UnfollowsTracker",
 
         "hero.title": "Who Unfollowed You on Instagram?",
         "hero.description": "No password. No login. Just drop your Instagram ZIP file and discover who doesn't follow you back. Fast. Private. Local.",
@@ -723,7 +765,7 @@
         "steps.step2.li2": "Open it and click <strong>Download Your Information</strong>.",
         "steps.step2.li3": "Log in if needed and click <strong>Download</strong> on the page. Save the ZIP file to your device.",
         "steps.step3.title": "3. Upload & Discover",
-        "steps.step3.li1": "Go to <strong>UnfollowersTracker.com</strong> and click <em>Discover Unfollowers</em>.",
+        "steps.step3.li1": "Go to <strong>UnfollowsTracker.com</strong> and click <em>Discover Unfollowers</em>.",
         "steps.step3.li2": "Upload your ZIP file when prompted.",
         "steps.step3.li3": "Click again to launch the scan. All done locally, no data leaves your device.",
 
@@ -754,17 +796,18 @@
 
         "donate.title": "Support This Project",
         "donate.description": "If this tool helps you, consider a small donation to keep it going.",
-        "footer.text": "© 2025 UnfollowersTracker — Privacy — GitHub",
+        "footer.text": "© 2025 UnfollowsTracker — Privacy — GitHub",
         "a.downloadLink": "Download Result",
-        "error.missingfiles": "Could not find both followers_1.json and following.json in the ZIP."
+        "error.missingfiles": "Could not find both followers_1.json and following.json in the ZIP.",
+        "label.language": "Language"
       },
 
       es: {
-        "header.title": "UnfollowersTracker",
+        "header.title": "UnfollowsTracker",
         "hero.title": "¿Quién te ha dejado de seguir en Instagram?",
         "hero.description": "Sin contraseña. Sin inicio de sesión. Solo sube tu archivo ZIP de Instagram y descubre quién no te sigue de vuelta. Rápido. Privado. Local.",
         "button.analyze": "Analizar ahora",
-        "drop.message": "Arrastra tu archivo .zip de Instagram o haz clic para subirlo",
+        "drop.message": "Arrastra tu archivo .zip de Instagram o haz clic para procesarlo",
         "drop.over": "Suelta el archivo aquí",
         "steps.title": "3 pasos para saber quién no te sigue de vuelta",
         "steps.step1.title": "1. Solicita tus datos",
@@ -777,7 +820,7 @@
         "steps.step2.li2": "Ábrelo y haz clic en <strong>Descargar tu información</strong>.",
         "steps.step2.li3": "Inicia sesión si es necesario y haz clic en <strong>Descargar</strong>. Guarda el archivo ZIP en tu dispositivo.",
         "steps.step3.title": "3. Sube y analiza",
-        "steps.step3.li1": "Entra a <strong>UnfollowersTracker.com</strong> y haz clic en <em>Descubrir quién no te sigue</em>.",
+        "steps.step3.li1": "Entra a <strong>UnfollowsTracker.com</strong> y haz clic en <em>Descubrir quién no te sigue</em>.",
         "steps.step3.li2": "Carga tu archivo ZIP cuando se te indique.",
         "steps.step3.li3": "Vuelve a hacer clic para iniciar el análisis. Todo ocurre localmente, sin enviar datos.",
         "result.success": "Todos te siguen de vuelta!",
@@ -804,9 +847,11 @@
         "contact.send": "Enviar",
         "donate.title": "Apoya este proyecto",
         "donate.description": "Si esta herramienta te resulta útil, considera una pequeña donación para mantenerla activa.",
-        "footer.text": "© 2025 UnfollowersTracker — Privacidad — GitHub",
+        "footer.text": "© 2025 UnfollowsTracker — Privacidad — GitHub",
         "a.downloadLink": "Descargar resultado",
-        "error.missingfiles": "No se encontraron followers_1.json y following.json en el ZIP."
+        "error.missingfiles": "No se encontraron followers_1.json y following.json en el ZIP.",
+        "error.invalid": "Error al analizar el archivo ZIP. Asegúrate de que sea válido.",
+        "label.language": "Idioma"
       }
     };
 
@@ -822,7 +867,6 @@
     }
 
     function setLang(lang) {
-      console.log("Language set to:", lang);
       localStorage.setItem('lang', lang);
       applyTranslations(lang);
       const langSelector = document.querySelector('select[aria-label="Select Language"]');
@@ -831,8 +875,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const savedLang = localStorage.getItem('lang') || navigator.language.slice(0, 2) || 'en';
-      const fallback = Object.keys(translations).includes(savedLang) ? savedLang : 'en';
+      const langCandidate = localStorage.getItem('lang') || navigator.language.slice(0, 2);
+      const fallback = translations[langCandidate] ? langCandidate : 'en';
       applyTranslations(fallback);
       const langSelector = document.querySelector('select[aria-label="Select Language"]');
       if (langSelector) {
@@ -858,8 +902,35 @@
       applyTranslations(currentLang);
     });
 
-    input.addEventListener('change', () => {
+    input.addEventListener('change', async () => {
       dropZone.classList.remove('json-loaded');
+      dropZone.style.backgroundColor = '';
+      const file = input.files[0];
+      if (!file) return;
+
+      try {
+        const zip = await JSZip.loadAsync(file);
+        let followersFile = null;
+        let followingFile = null;
+
+        zip.forEach((relativePath, zipEntry) => {
+          if (/followers_1\.json$/.test(zipEntry.name)) followersFile = zipEntry;
+          if (/following\.json$/.test(zipEntry.name)) followingFile = zipEntry;
+        });
+
+        if (followersFile && followingFile) {
+          dropZone.classList.add('json-loaded');
+          dropZone.style.backgroundColor = '#e6ffed';
+        } else {
+          dropZone.classList.remove('json-loaded');
+          dropZone.style.backgroundColor = '#ffecec';
+          alert(translations[currentLang]['error.missingfiles']);
+        }
+      } catch (err) {
+        dropZone.classList.remove('json-loaded');
+        dropZone.style.backgroundColor = '#ffecec';
+        alert(translations[currentLang]['error.invalid']);
+      }
     });
 
     dropZone.addEventListener('dragleave', e => {
@@ -872,7 +943,7 @@
       e.preventDefault();
       input.files = e.dataTransfer.files;
       dropMessage.textContent = e.dataTransfer.files[0]?.name || 'File selected';
-      dropZone.style.borderColor = '#28a745'; change
+      dropZone.style.borderColor = '#28a745';
     });
 
     dropZone.addEventListener('click', e => {
@@ -886,6 +957,7 @@
         'event_category': 'analysis',
         'event_label': 'analyze_button_click'
       });
+
       const ad = document.getElementById('analyzeAd');
       ad.style.display = 'block';
       (adsbygoogle = window.adsbygoogle || []).push({});
@@ -893,11 +965,20 @@
       const bar = document.getElementById('progressBar');
       const result = document.getElementById('result');
       const input = document.getElementById('zipInput');
+      const dropZone = document.getElementById('dropZone');
+
       result.innerHTML = '';
+      result.style.color = '';
       bar.style.width = '0';
       dropZone.classList.remove('json-loaded');
+      dropZone.style.backgroundColor = '';
+
       const file = input.files[0];
-      if (!file) return alert(translations[currentLang]['error.nofile']);
+      if (!file || !file.name.endsWith('.zip')) {
+        alert(translations[currentLang]['error.nofile']);
+        dropZone.style.backgroundColor = '#ffecec';
+        return;
+      }
 
       let p = 0;
       const interval = setInterval(() => {
@@ -920,7 +1001,8 @@
           clearInterval(interval);
           result.style.color = 'red';
           result.innerHTML = translations[currentLang]['error.missingfiles'];
-          dropZone.classList.remove('json-loaded');
+          dropZone.style.backgroundColor = '#ffecec';
+          alert(translations[currentLang]['error.missingfiles']);
           return;
         }
 
@@ -930,9 +1012,8 @@
         const followersJson = JSON.parse(followersData);
         const followingJson = JSON.parse(followingData).relationships_following || [];
 
-        const extractUsernames = (entries) => {
-          return entries.map(entry => entry.string_list_data?.[0]?.value).filter(Boolean);
-        };
+        const extractUsernames = (entries) =>
+          entries.map(entry => entry?.string_list_data?.[0]?.value).filter(Boolean);
 
         const followers = new Set(extractUsernames(followersJson));
         notFollowingBack = extractUsernames(followingJson).filter(u => !followers.has(u));
@@ -941,14 +1022,19 @@
         renderPage(1);
         downloadJSON(notFollowingBack);
 
+        dropZone.classList.add('json-loaded');
+        dropZone.style.backgroundColor = '#e6ffed';
       } catch (err) {
         clearInterval(interval);
         dropZone.classList.remove('json-loaded');
+        dropZone.style.backgroundColor = '#ffecec';
         console.error(err);
         result.style.color = 'red';
-        result.innerHTML = '❌ Error analyzing the ZIP file. Please ensure it is valid.';
+        result.innerHTML = translations[currentLang]['error.invalid'];
+        alert(translations[currentLang]['error.invalid']);
       }
     }
+
 
   </script>
 </body>
